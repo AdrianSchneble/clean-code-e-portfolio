@@ -16,19 +16,20 @@ import javax.swing.JTextField;
 
 public class PasswordGeneratorGUI {
 
+	private static final int DEFAULT_LENGTH = 8;
 	private JFrame frame = new JFrame("Password Generator");
 	private JButton generate = new JButton("Generate");
 	private JCheckBox specialCharsBox = new JCheckBox("Use special characters?", true);
 	private JCheckBox lowerCaseBox = new JCheckBox("Use lower case letters?", true);
 	private JCheckBox upperCaseBox = new JCheckBox("Use upper case letters?", true);
 	private JCheckBox digitsBox = new JCheckBox("Use digits?", true);
-	private JTextField lengthField = new JTextField("8");
-	private JLabel lengthLbl = new JLabel("Length:");
+	private JTextField lengthField = new JTextField("" + DEFAULT_LENGTH);
+	private JLabel lengthLabel = new JLabel("Length:");
 	private JTextArea generatedPassword;
 
 	public PasswordGeneratorGUI() {
 		setupFrame();
-		addGUI();
+		setupGUI();
 	}
 
 	private void setupFrame() {
@@ -52,12 +53,12 @@ public class PasswordGeneratorGUI {
 		frame.setLocation(x, y);
 	}
 
-	private void addGUI() {
+	private void setupGUI() {
 		frame.add(specialCharsBox);
 		frame.add(lowerCaseBox);
 		frame.add(upperCaseBox);
 		frame.add(digitsBox);
-		frame.add(lengthLbl);
+		frame.add(lengthLabel);
 		frame.add(lengthField);
 		generate.addActionListener(event -> generateButton());
 		frame.add(generate);
@@ -105,7 +106,7 @@ public class PasswordGeneratorGUI {
 	private String generatePassword(int length) {
 		PasswordGenerator passwordGenerator = new PasswordGenerator(digitsBox.isSelected(), lowerCaseBox.isSelected(),
 				upperCaseBox.isSelected(), specialCharsBox.isSelected());
-		return passwordGenerator.generate(length);
+		return passwordGenerator.generatePassword(length);
 	}
 
 }

@@ -5,15 +5,21 @@ import java.util.List;
 
 public class PasswordGenerator {
 
-	private static int digits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	private static char digits[] = new char[10];
 	private static char lowerCaseLetters[] = new char[29];
 	private static char upperCaseLetters[] = new char[29];
 	private static char specialChars[] = new char[29];
-	private List<List<Character>> validChars = new ArrayList<>();
+	private List<List<Character>> validCharLists = new ArrayList<>();
 
 	static {
+		initDigitList();
 		initLetterLists();
 		initSpecialCharsList();
+	}
+
+	private static void initDigitList() {
+		String digitString = "0123456789";
+		digits = digitString.toCharArray();
 	}
 
 	private static void initLetterLists() {
@@ -23,34 +29,24 @@ public class PasswordGenerator {
 	}
 
 	private static void initSpecialCharsList() {
-		String specials = "!\"§$" + '%' + "&/()={[]}+*~'#-_.:,;@<>|";
-		System.out.println(specials.length());
+		String specials = "!\"§$%&/()={[]}+*~'#-_.:,;@<>|";
 		specialChars = specials.toCharArray();
 	}
 
 	public PasswordGenerator(boolean useDigits, boolean useLowerCaseLetters, boolean useUpperCaseLetters,
 			boolean useSpecialChars) {
 		if (useDigits) {
-			validChars.add(listFromIntArray(digits));
+			validCharLists.add(listFromCharArray(digits));
 		}
 		if (useLowerCaseLetters) {
-			validChars.add(listFromCharArray(lowerCaseLetters));
+			validCharLists.add(listFromCharArray(lowerCaseLetters));
 		}
 		if (useUpperCaseLetters) {
-			validChars.add(listFromCharArray(upperCaseLetters));
+			validCharLists.add(listFromCharArray(upperCaseLetters));
 		}
 		if (useSpecialChars) {
-			validChars.add(listFromCharArray(specialChars));
+			validCharLists.add(listFromCharArray(specialChars));
 		}
-	}
-
-	private List<Character> listFromIntArray(int[] array) {
-		List<Character> list = new ArrayList<>();
-		for (int i : array) {
-			// (char)i returns the ASCII char with value i, not the char 'i'
-			list.add((char) (i + '0'));
-		}
-		return list;
 	}
 
 	private List<Character> listFromCharArray(char[] array) {
@@ -61,7 +57,7 @@ public class PasswordGenerator {
 		return list;
 	}
 
-	public String generate(int length) {
+	public String generatePassword(int length) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < length; i++) {
 			result.append(selectRandomChar());
@@ -70,8 +66,8 @@ public class PasswordGenerator {
 	}
 
 	private Character selectRandomChar() {
-		int type = (int) Math.round((Math.random() * (validChars.size() - 1)));
-		List<Character> c = validChars.get(type);
+		int randomCharacterList = (int) Math.round((Math.random() * (validCharLists.size() - 1)));
+		List<Character> c = validCharLists.get(randomCharacterList);
 		Character randomChar = c.get((int) Math.round((Math.random() * (c.size() - 1))));
 		return randomChar;
 	}

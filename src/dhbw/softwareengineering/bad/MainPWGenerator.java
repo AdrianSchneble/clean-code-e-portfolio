@@ -3,14 +3,12 @@ package dhbw.softwareengineering.bad;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -30,7 +28,7 @@ public class MainPWGenerator implements ActionListener {
 	JCheckBox digitsBox = new JCheckBox("Use digits?", true);
 	JTextField lengthField = new JTextField("8");
 	JLabel lengthLbl = new JLabel("Length:");
-	JTextArea generatedPassword = new JTextArea();
+	JTextArea generatedPassword;
 	int digits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	char lowerCaseLetters[] = new char[29];
 	char upperCaseLetters[] = new char[29];
@@ -45,41 +43,46 @@ public class MainPWGenerator implements ActionListener {
 
 	private void setupFrame() {
 		frame.setSize(300, 450);
-		frame.setLayout(null);
+		setFrameLayoutAndPadding();
+		centerFrameOnScreen();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+	}
+
+	private void setFrameLayoutAndPadding() {
+		int padding = 15;
+		frame.setLayout(new GridLayout(0, 1, padding, padding));
+		frame.getRootPane().setBorder(BorderFactory.createEmptyBorder(padding, padding, padding, padding));
+	}
+
+	private void centerFrameOnScreen() {
 		Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
 		int x = (d.width - frame.getWidth()) / 2;
 		int y = (d.height - frame.getHeight()) / 2;
 		frame.setLocation(x, y);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 	private void addGUI() {
-		specialCharsBox.setBounds(50, 10, 200, 20);
 		frame.add(specialCharsBox);
-		lowerCaseBox.setBounds(50, 40, 200, 20);
 		frame.add(lowerCaseBox);
-		upperCaseBox.setBounds(50, 70, 200, 20);
 		frame.add(upperCaseBox);
-		digitsBox.setBounds(50, 100, 200, 20);
 		frame.add(digitsBox);
-
-		lengthLbl.setBounds(50, 145, 50, 30);
 		frame.add(lengthLbl);
-		lengthField.setBounds(100, 145, 150, 30);
 		frame.add(lengthField);
-
-		generate.setBounds(100, 200, 100, 50);
 		generate.addActionListener(this);
 		frame.add(generate);
-
-		generatedPassword.setBounds(50, 280, 200, 100);
-		generatedPassword.setBackground(Color.BLACK);
-		generatedPassword.setFont(new Font("Consolas", Font.PLAIN, 14));
-		generatedPassword.setForeground(Color.WHITE);
-		generatedPassword.setBorder(BorderFactory.createLineBorder(Color.black));
-		generatedPassword.setLineWrap(true);
+		generatedPassword = createPasswordDisplayField();
 		frame.add(generatedPassword);
+	}
+
+	private JTextArea createPasswordDisplayField() {
+		JTextArea passwordDisplayField = new JTextArea();
+		passwordDisplayField.setBackground(Color.BLACK);
+		passwordDisplayField.setFont(new Font("Consolas", Font.PLAIN, 14));
+		passwordDisplayField.setForeground(Color.WHITE);
+		passwordDisplayField.setBorder(BorderFactory.createLineBorder(Color.black));
+		passwordDisplayField.setLineWrap(true);
+		return passwordDisplayField;
 	}
 
 	private void initLetterLists() {

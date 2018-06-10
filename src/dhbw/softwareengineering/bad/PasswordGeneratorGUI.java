@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -16,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MainPWGenerator {
+public class PasswordGeneratorGUI {
 
 	private JFrame frame = new JFrame("Password Generator");
 	private JButton generate = new JButton("Generate");
@@ -27,16 +25,10 @@ public class MainPWGenerator {
 	private JTextField lengthField = new JTextField("8");
 	private JLabel lengthLbl = new JLabel("Length:");
 	private JTextArea generatedPassword;
-	private int digits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	private char lowerCaseLetters[] = new char[29];
-	private char upperCaseLetters[] = new char[29];
-	private char specialChars[] = new char[29];
 
-	public MainPWGenerator() {
+	public PasswordGeneratorGUI() {
 		setupFrame();
 		addGUI();
-		initLetterLists();
-		initSpecialCharsList();
 	}
 
 	private void setupFrame() {
@@ -83,24 +75,6 @@ public class MainPWGenerator {
 		return passwordDisplayField;
 	}
 
-	private void initLetterLists() {
-		String alphabet = "abcdefghijklmnopqrstuvwxyzäöü";
-		lowerCaseLetters = alphabet.toLowerCase().toCharArray();
-		upperCaseLetters = alphabet.toUpperCase().toCharArray();
-	}
-
-	private void initSpecialCharsList() {
-		String specials = "!\"§$" + '%' + "&/()={[]}+*~'#-_.:,;@<>|";
-		System.out.println(specials.length());
-		specialChars = specials.toCharArray();
-	}
-
-	public static void main(String[] args) {
-		System.out.println("Application launching ...");
-		new MainPWGenerator();
-		System.out.println("Application launched.");
-	}
-
 	private void generateButton() {
 		String lengthInputByUser = lengthField.getText();
 		try {
@@ -129,53 +103,9 @@ public class MainPWGenerator {
 	}
 
 	private String generatePassword(int length) {
-		StringBuilder result = new StringBuilder();
-		ArrayList<List<Character>> list = getSelectedLists();
-		for (int i = 0; i < length; i++) {
-			result.append(selectRandomChar(list));
-		}
-		return result.toString();
-	}
-
-	private ArrayList<List<Character>> getSelectedLists() {
-		ArrayList<List<Character>> list = new ArrayList<>();
-		if (digitsBox.isSelected()) {
-			list.add(listFromIntArray(digits));
-		}
-		if (lowerCaseBox.isSelected()) {
-			list.add(listFromCharArray(lowerCaseLetters));
-		}
-		if (upperCaseBox.isSelected()) {
-			list.add(listFromCharArray(upperCaseLetters));
-		}
-		if (specialCharsBox.isSelected()) {
-			list.add(listFromCharArray(specialChars));
-		}
-		return list;
-	}
-
-	private Character selectRandomChar(ArrayList<List<Character>> list) {
-		int type = (int) Math.round((Math.random() * (list.size() - 1)));
-		List<Character> c = list.get(type);
-		Character randomChar = c.get((int) Math.round((Math.random() * (c.size() - 1))));
-		return randomChar;
-	}
-
-	private List<Character> listFromIntArray(int[] array) {
-		List<Character> list = new ArrayList<>();
-		for (int i : array) {
-			// (char)i returns the ASCII char with value i, not the char 'i'
-			list.add((char) (i + '0'));
-		}
-		return list;
-	}
-
-	private List<Character> listFromCharArray(char[] array) {
-		List<Character> list = new ArrayList<>();
-		for (char c : array) {
-			list.add(c);
-		}
-		return list;
+		PasswordGenerator passwordGenerator = new PasswordGenerator(digitsBox.isSelected(), lowerCaseBox.isSelected(),
+				upperCaseBox.isSelected(), specialCharsBox.isSelected());
+		return passwordGenerator.generate(length);
 	}
 
 }

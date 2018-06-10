@@ -18,21 +18,21 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class MainPWGenerator implements ActionListener {
+public class MainPWGenerator {
 
-	JFrame frame = new JFrame("Password Generator");
-	JButton generate = new JButton("Generate");
-	JCheckBox specialCharsBox = new JCheckBox("Use special characters?", true);
-	JCheckBox lowerCaseBox = new JCheckBox("Use lower case letters?", true);
-	JCheckBox upperCaseBox = new JCheckBox("Use upper case letters?", true);
-	JCheckBox digitsBox = new JCheckBox("Use digits?", true);
-	JTextField lengthField = new JTextField("8");
-	JLabel lengthLbl = new JLabel("Length:");
-	JTextArea generatedPassword;
-	int digits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-	char lowerCaseLetters[] = new char[29];
-	char upperCaseLetters[] = new char[29];
-	char specialChars[] = new char[29];
+	private JFrame frame = new JFrame("Password Generator");
+	private JButton generate = new JButton("Generate");
+	private JCheckBox specialCharsBox = new JCheckBox("Use special characters?", true);
+	private JCheckBox lowerCaseBox = new JCheckBox("Use lower case letters?", true);
+	private JCheckBox upperCaseBox = new JCheckBox("Use upper case letters?", true);
+	private JCheckBox digitsBox = new JCheckBox("Use digits?", true);
+	private JTextField lengthField = new JTextField("8");
+	private JLabel lengthLbl = new JLabel("Length:");
+	private JTextArea generatedPassword;
+	private int digits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+	private char lowerCaseLetters[] = new char[29];
+	private char upperCaseLetters[] = new char[29];
+	private char specialChars[] = new char[29];
 
 	public MainPWGenerator() {
 		setupFrame();
@@ -69,7 +69,7 @@ public class MainPWGenerator implements ActionListener {
 		frame.add(digitsBox);
 		frame.add(lengthLbl);
 		frame.add(lengthField);
-		generate.addActionListener(this);
+		generate.addActionListener(event -> generateButton());
 		frame.add(generate);
 		generatedPassword = createPasswordDisplayField();
 		frame.add(generatedPassword);
@@ -103,20 +103,17 @@ public class MainPWGenerator implements ActionListener {
 		System.out.println("Application launched.");
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == generate) {
-			String lengthInputByUser = lengthField.getText();
-			try {
-				if (lengthInputByUser.length() == 0) {
-					throw new IllegalArgumentException("No value entered for 'length'.");
-				}
-				generateAndShowPassword(Integer.valueOf(lengthInputByUser));
-			} catch (NumberFormatException nfe) {
-				generatedPassword.setText("Error. Please only enter numbers in the \"length\" field.");
-			} catch (IllegalArgumentException iae) {
-				generatedPassword.setText("Enter a value for 'length'");
+	private void generateButton() {
+		String lengthInputByUser = lengthField.getText();
+		try {
+			if (lengthInputByUser.length() == 0) {
+				throw new IllegalArgumentException("No value entered for 'length'.");
 			}
+			generateAndShowPassword(Integer.valueOf(lengthInputByUser));
+		} catch (NumberFormatException nfe) {
+			generatedPassword.setText("Error. Please only enter numbers in the \"length\" field.");
+		} catch (IllegalArgumentException iae) {
+			generatedPassword.setText("Enter a value for 'length'");
 		}
 	}
 

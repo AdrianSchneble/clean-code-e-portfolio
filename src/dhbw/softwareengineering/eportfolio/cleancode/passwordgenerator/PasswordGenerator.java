@@ -30,18 +30,17 @@ public class PasswordGenerator {
 
 	public PasswordGenerator(boolean useDigits, boolean useLowerCaseLetters, boolean useUpperCaseLetters,
 			boolean useSpecialChars) {
-		ArrayList<List<Character>> list = new ArrayList<>();
 		if (useDigits) {
-			list.add(listFromIntArray(digits));
+			validChars.add(listFromIntArray(digits));
 		}
 		if (useLowerCaseLetters) {
-			list.add(listFromCharArray(lowerCaseLetters));
+			validChars.add(listFromCharArray(lowerCaseLetters));
 		}
 		if (useUpperCaseLetters) {
-			list.add(listFromCharArray(upperCaseLetters));
+			validChars.add(listFromCharArray(upperCaseLetters));
 		}
 		if (useSpecialChars) {
-			list.add(listFromCharArray(specialChars));
+			validChars.add(listFromCharArray(specialChars));
 		}
 	}
 
@@ -65,14 +64,14 @@ public class PasswordGenerator {
 	public String generate(int length) {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < length; i++) {
-			result.append(selectRandomChar(validChars));
+			result.append(selectRandomChar());
 		}
 		return result.toString();
 	}
 
-	private Character selectRandomChar(List<List<Character>> list) {
-		int type = (int) Math.round((Math.random() * (list.size() - 1)));
-		List<Character> c = list.get(type);
+	private Character selectRandomChar() {
+		int type = (int) Math.round((Math.random() * (validChars.size() - 1)));
+		List<Character> c = validChars.get(type);
 		Character randomChar = c.get((int) Math.round((Math.random() * (c.size() - 1))));
 		return randomChar;
 	}

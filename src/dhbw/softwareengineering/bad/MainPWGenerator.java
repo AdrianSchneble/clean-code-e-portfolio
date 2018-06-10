@@ -118,10 +118,8 @@ public class MainPWGenerator {
 	}
 
 	private void generateAndShowPassword(int length) {
-		String result = new String();
 		if (anyCharacterSetIsSelected()) {
-			result = generatePassword(length, result);
-			generatedPassword.setText(result);
+			generatedPassword.setText(generatePassword(length));
 		} else {
 			generatedPassword.setText("Error: tick at least one set of chars");
 		}
@@ -132,12 +130,13 @@ public class MainPWGenerator {
 				|| specialCharsBox.isSelected();
 	}
 
-	private String generatePassword(int length, String result) {
+	private String generatePassword(int length) {
+		StringBuilder result = new StringBuilder();
 		ArrayList<List<Character>> list = getSelectedLists();
 		for (int i = 0; i < length; i++) {
-			result += selectRandomChar(list);
+			result.append(selectRandomChar(list));
 		}
-		return result;
+		return result.toString();
 	}
 
 	private ArrayList<List<Character>> getSelectedLists() {

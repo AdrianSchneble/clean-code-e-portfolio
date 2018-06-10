@@ -7,6 +7,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -97,74 +101,84 @@ public class MainPWGenerator implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == generate) {
-			String str = lengthField.getText();
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == generate) {
+			String lengthInputByUser = lengthField.getText();
 			try {
-				if (str.length() == 0) {
+				if (lengthInputByUser.length() == 0) {
 					throw new IllegalArgumentException("No value entered for 'length'.");
 				}
-				int length = Integer.valueOf(str);
-				generateAndShowPassword(length);
+				generateAndShowPassword(Integer.valueOf(lengthInputByUser));
 			} catch (NumberFormatException nfe) {
 				generatedPassword.setText("Error. Please only enter numbers in the \"length\" field.");
 			} catch (IllegalArgumentException iae) {
 				generatedPassword.setText("Enter a value for 'length'");
 			}
 		}
-
 	}
 
 	private void generateAndShowPassword(int length) {
 		String result = new String();
-		if (digitsBox.isSelected() || lowerCaseBox.isSelected() || upperCaseBox.isSelected()
-				|| specialCharsBox.isSelected()) {
-			for (int i = 0; i < length; i++) {
-				ArrayList<Character> chars = new ArrayList<Character>();
-				ArrayList<char[]> list = new ArrayList<char[]>();
-				if (digitsBox.isSelected()) {
-					char[] dig = new char[digits.length];
-					for (int j = 0; j < digits.length; j++) {
-						dig[j] = Integer.toString(digits[j]).charAt(0);
-					}
-					list.add(dig);
-					for (int c : digits) {
-						chars.add(Integer.toString(c).charAt(0));
-					}
-				}
-				if (lowerCaseBox.isSelected()) {
-					list.add(lowerCaseLetters);
-					for (char c : lowerCaseLetters) {
-						chars.add(c);
-					}
-				}
-				if (upperCaseBox.isSelected()) {
-					list.add(upperCaseLetters);
-					for (char c : upperCaseLetters) {
-						chars.add(c);
-					}
-				}
-				if (specialCharsBox.isSelected()) {
-					list.add(specialChars);
-					for (char c : specialChars) {
-						chars.add(c);
-					}
-				}
-				int type = (int) Math.round((Math.random() * (list.size() - 1)));
-				// System.out.println(list.get(1));
-				char[] c = list.get(type);
-				result += c[(int) Math.round((Math.random() * (c.length - 1)))];
-				// res += chooseRandom(chars.toArray());
-			}
+		if (anyCharacterSetIsSelected()) {
+			result = generatePassword(length, result);
 			generatedPassword.setText(result);
 		} else {
 			generatedPassword.setText("Error: tick at least one set of chars");
 		}
 	}
 
-	public static Object chooseRandom(Object... object) {
-		int result = (int) Math.round((Math.random() * (object.length - 1)));
-		return object[result];
+	private boolean anyCharacterSetIsSelected() {
+		return digitsBox.isSelected() || lowerCaseBox.isSelected() || upperCaseBox.isSelected()
+				|| specialCharsBox.isSelected();
+	}
+
+	private String generatePassword(int length, String result) {
+		ArrayList<List<Character>> list = getSelectedLists();
+		for (int i = 0; i < length; i++) {
+			result += selectRandomChar(list);
+		}
+		return result;
+	}
+
+	private ArrayList<List<Character>> getSelectedLists() {
+		ArrayList<List<Character>> list = new ArrayList<>();
+		if (digitsBox.isSelected()) {
+			list.add(listFromIntArray(digits));
+		}
+		if (lowerCaseBox.isSelected()) {
+			list.add(listFromCharArray(lowerCaseLetters));
+		}
+		if (upperCaseBox.isSelected()) {
+			list.add(listFromCharArray(upperCaseLetters));
+		}
+		if (specialCharsBox.isSelected()) {
+			list.add(listFromCharArray(specialChars));
+		}
+		return list;
+	}
+
+	private Character selectRandomChar(ArrayList<List<Character>> list) {
+		int type = (int) Math.round((Math.random() * (list.size() - 1)));
+		List<Character> c = list.get(type);
+		Character randomChar = c.get((int) Math.round((Math.random() * (c.size() - 1))));
+		return randomChar;
+	}
+
+	private List<Character> listFromIntArray(int[] array) {
+		List<Character> list = new ArrayList<>();
+		for (int i : array) {
+			// (char)i returns the ASCII char with value i, not the char 'i'
+			list.add((char) (i + '0'));
+		}
+		return list;
+	}
+
+	private List<Character> listFromCharArray(char[] array) {
+		List<Character> list = new ArrayList<>();
+		for (char c : array) {
+			list.add(c);
+		}
+		return list;
 	}
 
 }

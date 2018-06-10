@@ -33,6 +33,13 @@ public class MainPWGenerator implements ActionListener {
 	int length = -1;
 	
 	public MainPWGenerator() {
+		setupFrame();
+		addGUI();
+		initLetterLists();
+		initSpecialCharsList();
+	}
+
+	private void setupFrame() {
 		frame.setSize(300, 450);
 		frame.setLayout(null);
 		frame.setVisible(true);
@@ -41,7 +48,9 @@ public class MainPWGenerator implements ActionListener {
 		int y = (d.height - frame.getHeight()) / 2;
 		frame.setLocation(x, y);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+	}
+
+	private void addGUI() {
 		specialCharsBox.setBounds(50, 10, 200, 20);
 		frame.add(specialCharsBox);
 		lowerCaseBox.setBounds(50, 40, 200, 20);
@@ -67,16 +76,20 @@ public class MainPWGenerator implements ActionListener {
 		result.setBorder(BorderFactory.createLineBorder(Color.black));
 		result.setLineWrap(true);
 		frame.add(result);
-		
+	}
+
+	private void initLetterLists() {
 		String alphabet = "abcdefghijklmnopqrstuvwxyzäöü";
 		lowerCaseLetters = alphabet.toLowerCase().toCharArray();
 		upperCaseLetters = alphabet.toUpperCase().toCharArray();
-		
+	}
+
+	private void initSpecialCharsList() {
 		String specials = "!\"§$"+'%'+"&/()={[]}+*~'#-_.:,;@<>|";
 		System.out.println(specials.length());
 		specialChars = specials.toCharArray();
 	}
-	
+
 	public static void main(String[] args) {
 		System.out.println("Application launching ...");
 		new MainPWGenerator();

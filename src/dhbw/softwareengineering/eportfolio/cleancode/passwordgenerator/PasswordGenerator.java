@@ -1,4 +1,4 @@
-package dhbw.softwareengineering.bad;
+package dhbw.softwareengineering.eportfolio.cleancode.passwordgenerator;
 
 import java.util.ArrayList;
 import java.util.List;

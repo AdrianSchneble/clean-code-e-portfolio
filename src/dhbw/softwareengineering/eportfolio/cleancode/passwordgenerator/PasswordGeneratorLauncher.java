@@ -1,4 +1,4 @@
-package dhbw.softwareengineering.bad;
+package dhbw.softwareengineering.eportfolio.cleancode.passwordgenerator;
 
 public class PasswordGeneratorLauncher {
 	public static void main(String[] args) {

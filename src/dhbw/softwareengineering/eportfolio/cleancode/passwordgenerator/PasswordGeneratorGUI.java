@@ -1,4 +1,4 @@
-package dhbw.softwareengineering.bad;
+package dhbw.softwareengineering.eportfolio.cleancode.passwordgenerator;
 
 import java.awt.Color;
 import java.awt.Dimension;

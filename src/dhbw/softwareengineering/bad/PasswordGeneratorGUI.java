@@ -1,4 +1,4 @@
-package dhbw.softwareengineering.good;
+package dhbw.softwareengineering.bad;
 
 import java.awt.Color;
 import java.awt.Dimension;

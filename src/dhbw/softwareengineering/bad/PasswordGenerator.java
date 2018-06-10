@@ -1,4 +1,4 @@
-package dhbw.softwareengineering.good;
+package dhbw.softwareengineering.bad;
 
 import java.util.ArrayList;
 import java.util.List;

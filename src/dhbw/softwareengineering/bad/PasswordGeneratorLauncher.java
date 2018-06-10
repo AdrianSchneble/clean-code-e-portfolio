@@ -1,4 +1,4 @@
-package dhbw.softwareengineering.good;
+package dhbw.softwareengineering.bad;
 
 public class PasswordGeneratorLauncher {
 	public static void main(String[] args) {

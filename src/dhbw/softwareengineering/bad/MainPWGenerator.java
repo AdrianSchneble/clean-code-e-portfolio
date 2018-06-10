@@ -1,4 +1,5 @@
 package dhbw.softwareengineering.bad;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -25,13 +26,12 @@ public class MainPWGenerator implements ActionListener {
 	JCheckBox digitsBox = new JCheckBox("Use digits?", true);
 	JTextField lengthField = new JTextField("8");
 	JLabel lengthLbl = new JLabel("Length:");
-	JTextArea result = new JTextArea();
-	int digits[] = {0,1,2,3,4,5,6,7,8,9};
+	JTextArea generatedPassword = new JTextArea();
+	int digits[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 	char lowerCaseLetters[] = new char[29];
 	char upperCaseLetters[] = new char[29];
 	char specialChars[] = new char[29];
-	int length = -1;
-	
+
 	public MainPWGenerator() {
 		setupFrame();
 		addGUI();
@@ -59,23 +59,23 @@ public class MainPWGenerator implements ActionListener {
 		frame.add(upperCaseBox);
 		digitsBox.setBounds(50, 100, 200, 20);
 		frame.add(digitsBox);
-		
+
 		lengthLbl.setBounds(50, 145, 50, 30);
 		frame.add(lengthLbl);
 		lengthField.setBounds(100, 145, 150, 30);
 		frame.add(lengthField);
-		
+
 		generate.setBounds(100, 200, 100, 50);
 		generate.addActionListener(this);
 		frame.add(generate);
-		
-		result.setBounds(50, 280, 200, 100);
-		result.setBackground(Color.BLACK);
-		result.setFont(new Font("Consolas", Font.PLAIN, 14));
-		result.setForeground(Color.WHITE);
-		result.setBorder(BorderFactory.createLineBorder(Color.black));
-		result.setLineWrap(true);
-		frame.add(result);
+
+		generatedPassword.setBounds(50, 280, 200, 100);
+		generatedPassword.setBackground(Color.BLACK);
+		generatedPassword.setFont(new Font("Consolas", Font.PLAIN, 14));
+		generatedPassword.setForeground(Color.WHITE);
+		generatedPassword.setBorder(BorderFactory.createLineBorder(Color.black));
+		generatedPassword.setLineWrap(true);
+		frame.add(generatedPassword);
 	}
 
 	private void initLetterLists() {
@@ -85,7 +85,7 @@ public class MainPWGenerator implements ActionListener {
 	}
 
 	private void initSpecialCharsList() {
-		String specials = "!\"§$"+'%'+"&/()={[]}+*~'#-_.:,;@<>|";
+		String specials = "!\"§$" + '%' + "&/()={[]}+*~'#-_.:,;@<>|";
 		System.out.println(specials.length());
 		specialChars = specials.toCharArray();
 	}
@@ -95,75 +95,75 @@ public class MainPWGenerator implements ActionListener {
 		new MainPWGenerator();
 		System.out.println("Application launched.");
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == generate) {
 			String str = lengthField.getText();
-			if (str.length() != 0) {
-				try {
-					length = Integer.valueOf(str);
-				} catch (NumberFormatException nfe) {
-					System.out.println("NumberFormatException in lengthField. Only digits from 0-9 are valid, please correct your input.");
-					length = -1;
-					result.setText("Error. Please only enter numbers in the \"length\" field.");
+			try {
+				if (str.length() == 0) {
+					throw new IllegalArgumentException("No value entered for 'length'.");
 				}
-			} else {
-				length = -1;
-				result.setText("Enter a value for \"length\"");
-			}
-			if (length != -1) {
-				String res = new String();
-				if (digitsBox.isSelected() || lowerCaseBox.isSelected() || upperCaseBox.isSelected() || specialCharsBox.isSelected()) {
-					for (int i = 0; i < length; i++) {
-						ArrayList<Character> chars = new ArrayList<Character>();
-						ArrayList<char[]> list = new ArrayList<char[]>();
-						if (digitsBox.isSelected()) {
-							char[] dig = new char[digits.length];
-							for (int j = 0; j < digits.length; j++) {
-								dig[j] = Integer.toString(digits[j]).charAt(0);
-							}
-							list.add(dig);
-							for (int c : digits) {
-								chars.add(Integer.toString(c).charAt(0));
-							}
-						}
-						if (lowerCaseBox.isSelected()) {
-							list.add(lowerCaseLetters);
-							for (char c : lowerCaseLetters) {
-								chars.add(c);
-							}
-						}
-						if (upperCaseBox.isSelected()) {
-							list.add(upperCaseLetters);
-							for (char c : upperCaseLetters) {
-								chars.add(c);
-							}
-						}
-						if (specialCharsBox.isSelected()) {
-							list.add(specialChars);
-							for (char c : specialChars) {
-								chars.add(c);
-							}
-						}
-						int type = (int) Math.round((Math.random()*(list.size()-1)));
-						//System.out.println(list.get(1));
-						char[] c = list.get(type);
-						res += c[(int) Math.round((Math.random()*(c.length-1)))];
-						//res += chooseRandom(chars.toArray());
-					}
-					result.setText(res);
-				} else {
-					result.setText("Error: tick at least one set of chars");
-				}
-			} else {
-				System.out.println("length is 0 - nothing happens");
+				int length = Integer.valueOf(str);
+				generateAndShowPassword(length);
+			} catch (NumberFormatException nfe) {
+				generatedPassword.setText("Error. Please only enter numbers in the \"length\" field.");
+			} catch (IllegalArgumentException iae) {
+				generatedPassword.setText("Enter a value for 'length'");
 			}
 		}
+
 	}
-	
+
+	private void generateAndShowPassword(int length) {
+		String result = new String();
+		if (digitsBox.isSelected() || lowerCaseBox.isSelected() || upperCaseBox.isSelected()
+				|| specialCharsBox.isSelected()) {
+			for (int i = 0; i < length; i++) {
+				ArrayList<Character> chars = new ArrayList<Character>();
+				ArrayList<char[]> list = new ArrayList<char[]>();
+				if (digitsBox.isSelected()) {
+					char[] dig = new char[digits.length];
+					for (int j = 0; j < digits.length; j++) {
+						dig[j] = Integer.toString(digits[j]).charAt(0);
+					}
+					list.add(dig);
+					for (int c : digits) {
+						chars.add(Integer.toString(c).charAt(0));
+					}
+				}
+				if (lowerCaseBox.isSelected()) {
+					list.add(lowerCaseLetters);
+					for (char c : lowerCaseLetters) {
+						chars.add(c);
+					}
+				}
+				if (upperCaseBox.isSelected()) {
+					list.add(upperCaseLetters);
+					for (char c : upperCaseLetters) {
+						chars.add(c);
+					}
+				}
+				if (specialCharsBox.isSelected()) {
+					list.add(specialChars);
+					for (char c : specialChars) {
+						chars.add(c);
+					}
+				}
+				int type = (int) Math.round((Math.random() * (list.size() - 1)));
+				// System.out.println(list.get(1));
+				char[] c = list.get(type);
+				result += c[(int) Math.round((Math.random() * (c.length - 1)))];
+				// res += chooseRandom(chars.toArray());
+			}
+			generatedPassword.setText(result);
+		} else {
+			generatedPassword.setText("Error: tick at least one set of chars");
+		}
+	}
+
 	public static Object chooseRandom(Object... object) {
-		int result = (int) Math.round((Math.random()*(object.length-1)));
+		int result = (int) Math.round((Math.random() * (object.length - 1)));
 		return object[result];
 	}
 
